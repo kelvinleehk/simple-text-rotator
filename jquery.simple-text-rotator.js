@@ -16,7 +16,8 @@
   var defaults = {
 		animation: "dissolve",
 		separator: ",",
-		speed: 2000
+		speed: 2000,
+		shuffle: false
 	};
 	
 	$.fx.step.textShadowBlur = function(fx) {
@@ -25,6 +26,21 @@
 	
   $.fn.textrotator = function(options){
     var settings = $.extend({}, defaults, options);
+
+    var shuffle = function(array) {
+      var currentIndex = array.length, temporaryValue, randomIndex;
+      // While there remain elements to shuffle...
+      while (0 !== currentIndex) {
+        // Pick a remaining element...
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+        // And swap it with the current element.
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+      }
+      return array;
+    };
     
     return this.each(function(){
       var el = $(this)
@@ -32,6 +48,11 @@
       $.each(el.text().split(settings.separator), function(key, value) { 
         array.push(value); 
       });
+
+      if (settings.shuffle) {
+        shuffle(array);
+      }
+
       el.text(array[0]);
       
       // animation option
