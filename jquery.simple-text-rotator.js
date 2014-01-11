@@ -4,26 +4,27 @@
  * Copyright 2013 Pete Rojwongsuriya.
  * http://www.thepetedesign.com
  *
- * A very simple and light weight jQuery plugin that 
- * allows you to rotate multiple text without changing 
+ * A very simple and light weight jQuery plugin that
+ * allows you to rotate multiple text without changing
  * the layout
  * https://github.com/peachananr/simple-text-rotator
  *
  * ========================================================== */
 
 !function($){
-  
+
   var defaults = {
 		animation: "dissolve",
 		separator: ",",
 		speed: 2000,
+    timeout: 0,
 		shuffle: false
 	};
-	
+
 	$.fx.step.textShadowBlur = function(fx) {
     $(fx.elem).prop('textShadowBlur', fx.now).css({textShadow: '0 0 ' + Math.floor(fx.now) + 'px black'});
   };
-	
+
   $.fn.textrotator = function(options){
     var settings = $.extend({}, defaults, options);
 
@@ -41,12 +42,12 @@
       }
       return array;
     };
-    
+
     return this.each(function(){
       var el = $(this)
       var array = [];
-      $.each(el.text().split(settings.separator), function(key, value) { 
-        array.push(value); 
+      $.each(el.text().split(settings.separator), function(key, value) {
+        array.push(value);
       });
 
       if (settings.shuffle) {
@@ -54,10 +55,10 @@
       }
 
       el.text(array[0]);
-      
+
       // animation option
       var rotate = function() {
-        switch (settings.animation) { 
+        switch (settings.animation) {
           case 'dissolve':
             el.animate({
               textShadowBlur:20,
@@ -71,16 +72,16 @@
               }, 500 );
             });
           break;
-          
+
           case 'flip':
             if(el.find(".back").length > 0) {
               el.html(el.find(".back").html())
             }
-          
+
             var initial = el.text()
             var index = $.inArray(initial, array)
             if((index + 1) == array.length) index = -1
-            
+
             el.html("");
             $("<span class='front'>" + initial + "</span>").appendTo(el);
             $("<span class='back'>" + array[index + 1] + "</span>").appendTo(el);
@@ -90,18 +91,18 @@
               "-o-transform": " rotateY(-180deg)",
               "transform": " rotateY(-180deg)"
             })
-            
+
           break;
-          
+
           case 'flipUp':
             if(el.find(".back").length > 0) {
               el.html(el.find(".back").html())
             }
-          
+
             var initial = el.text()
             var index = $.inArray(initial, array)
             if((index + 1) == array.length) index = -1
-            
+
             el.html("");
             $("<span class='front'>" + initial + "</span>").appendTo(el);
             $("<span class='back'>" + array[index + 1] + "</span>").appendTo(el);
@@ -111,18 +112,18 @@
               "-o-transform": " rotateX(-180deg)",
               "transform": " rotateX(-180deg)"
             })
-            
+
           break;
-          
+
           case 'flipCube':
             if(el.find(".back").length > 0) {
               el.html(el.find(".back").html())
             }
-          
+
             var initial = el.text()
             var index = $.inArray(initial, array)
             if((index + 1) == array.length) index = -1
-            
+
             el.html("");
             $("<span class='front'>" + initial + "</span>").appendTo(el);
             $("<span class='back'>" + array[index + 1] + "</span>").appendTo(el);
@@ -132,18 +133,18 @@
               "-o-transform": " rotateY(180deg)",
               "transform": " rotateY(180deg)"
             })
-            
+
           break;
-          
+
           case 'flipCubeUp':
             if(el.find(".back").length > 0) {
               el.html(el.find(".back").html())
             }
-          
+
             var initial = el.text()
             var index = $.inArray(initial, array)
             if((index + 1) == array.length) index = -1
-            
+
             el.html("");
             $("<span class='front'>" + initial + "</span>").appendTo(el);
             $("<span class='back'>" + array[index + 1] + "</span>").appendTo(el);
@@ -153,16 +154,16 @@
               "-o-transform": " rotateX(180deg)",
               "transform": " rotateX(180deg)"
             })
-            
+
           break;
-          
+
           case 'spin':
             if(el.find(".rotating").length > 0) {
               el.html(el.find(".rotating").html())
             }
             index = $.inArray(el.text(), array)
             if((index + 1) == array.length) index = -1
-            
+
             el.wrapInner("<span class='rotating spin' />").find(".rotating").hide().text(array[index + 1]).show().css({
               "-webkit-transform": " rotate(0) scale(1)",
               "-moz-transform": "rotate(0) scale(1)",
@@ -170,7 +171,7 @@
               "transform": "rotate(0) scale(1)"
             })
           break;
-          
+
           case 'fade':
             el.fadeOut(settings.speed, function() {
               index = $.inArray(el.text(), array)
@@ -180,10 +181,12 @@
           break;
         }
       };
-      setInterval(rotate, settings.speed);
+      setTimeout(function() {
+        setInterval(rotate, settings.speed)
+      }, settings.timeout);
     });
   }
-  
+
 }(window.jQuery);
 
 
