@@ -9,6 +9,9 @@
  * the layout
  * https://github.com/peachananr/simple-text-rotator
  *
+ * This fork is to add a timeout setting, and allow html code
+ * for flipUp effect
+ *
  * ========================================================== */
 
 !function($){
@@ -46,7 +49,7 @@
     return this.each(function(){
       var el = $(this)
       var array = [];
-      $.each(el.text().split(settings.separator), function(key, value) {
+      $.each(el.html().split(settings.separator), function(key, value) {
         array.push(value);
       });
 
@@ -54,7 +57,7 @@
         shuffle(array);
       }
 
-      el.text(array[0]);
+      el.html(array[0]).parent("h1").show();
 
       // animation option
       var rotate = function() {
@@ -99,7 +102,7 @@
               el.html(el.find(".back").html())
             }
 
-            var initial = el.text()
+            var initial = el.html()
             var index = $.inArray(initial, array)
             if((index + 1) == array.length) index = -1
 
